@@ -1,0 +1,61 @@
+# Default values for gmaps-location-service
+replicaCount: 3
+
+image:
+  repository: gmaps-location-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: gmaps-location-sa
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: gmaps-location-service.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Configuration for the application
+config:
+  port: "3000"
+  defaultRadius: "1000"
+  maxRadius: "50000"
+
+# Google Maps API key (should be provided separately as a secret)
+googleMapsApiKey: ""

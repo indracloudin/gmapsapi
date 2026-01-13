@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gmaps-location-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: gmaps-location-role
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gmaps-location-rolebinding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: gmaps-location-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: gmaps-location-role
+  apiGroup: rbac.authorization.k8s.io
